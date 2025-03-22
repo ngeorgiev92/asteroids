@@ -4,6 +4,8 @@ from constants import *
 
 def main():
     pygame.init()
+    clock = pygame.time.Clock()
+    dt = 0
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids")
     screen_color = pygame.Color("black")
@@ -14,6 +16,8 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+        clock.tick()
+        dt = clock.tick() / 1000
         screen.fill(screen_color)
         pygame.display.flip()
     pygame.quit()
