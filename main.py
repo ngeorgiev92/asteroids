@@ -1,11 +1,21 @@
 import pygame
 import time
+import sys
 from constants import *
 from player import *
+from asteroid import *
+from asteroidfield import *
 
 def main():
     pygame.init()
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    Player.containers = (drawable, updatable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable,)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    asteroid_field = AsteroidField()
     clock = pygame.time.Clock()
     dt = 0
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -18,10 +28,21 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        clock.tick()
-        dt = clock.tick() / 1000
+        dt = clock.tick(60) / 1000
         screen.fill(screen_color)
-        player.draw(screen)
+        updatable.update(dt)
+        for asteroid in asteroids:
+            if(asteroid.check_collision(player)):
+                print("Game over!")
+                sys.exit()
+        try:
+            drawable.draw(screen)
+        except AttributeError:
+    # If that fails, try drawing each sprite individually
+            for sprite in drawable:
+                if hasattr(sprite, 'draw') and callable(sprite.draw):
+                    sprite.draw(screen)
+
         pygame.display.flip()
     pygame.quit()
 if __name__ == "__main__":
