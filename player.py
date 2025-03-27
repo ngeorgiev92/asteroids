@@ -14,6 +14,7 @@ class Player(CircleShape, pygame.sprite.Sprite):  # Inherit from CircleShape and
         self.hitbox = self.rect
         self.rotation = 0  # Angle of rotation in degrees
         self.update_image()  # Draw the initial triangle on the image
+        self.timer = 0
 
     
     def triangle(self):
@@ -65,6 +66,7 @@ class Player(CircleShape, pygame.sprite.Sprite):  # Inherit from CircleShape and
             self.move(dt)
         if keys[pygame.K_SPACE]:
             self.shoot(Shot)
+        self.timer -= dt
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -72,7 +74,12 @@ class Player(CircleShape, pygame.sprite.Sprite):  # Inherit from CircleShape and
         self.rect.center = self.position
 
     def shoot(self, shot):
-        shot = Shot(self.position, self.position, SHOT_RADIUS)
-        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED * -1
+        if self.timer > 0:
+            pass
+        else:
+            shot = Shot(self.position, self.position, SHOT_RADIUS)
+            shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED * -1
+            self.timer = PLAYER_SHOOT_COOLDOWN
+
         
         
