@@ -16,7 +16,7 @@ def main():
     Player.containers = (drawable, updatable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable,)
-    Shot.containers = (drawable, updatable)
+    Shot.containers = (shots, drawable, updatable)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
     clock = pygame.time.Clock()
@@ -38,6 +38,11 @@ def main():
             if(asteroid.check_collision(player)):
                 print("Game over!")
                 sys.exit()
+        for asteroid in asteroids:
+            for shot in shots:
+                if(asteroid.check_collision(shot)):
+                    asteroid.split()
+                    shot.kill()
         try:
             drawable.draw(screen)
         except AttributeError:
