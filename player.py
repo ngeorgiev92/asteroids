@@ -1,5 +1,6 @@
 from circleshape import *
 from constants import *
+from shot import *
 
 
 class Player(CircleShape, pygame.sprite.Sprite):  # Inherit from CircleShape and pygame.sprite.Sprite
@@ -62,8 +63,16 @@ class Player(CircleShape, pygame.sprite.Sprite):  # Inherit from CircleShape and
             self.move(dt * -1)
         if keys[pygame.K_s]:
             self.move(dt)
+        if keys[pygame.K_SPACE]:
+            self.shoot(Shot)
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
         self.rect.center = self.position
+
+    def shoot(self, shot):
+        shot = Shot(self.position, self.position, SHOT_RADIUS)
+        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED * -1
+        
+        
